@@ -78,19 +78,6 @@ Python + MySQL project to manage recurring subscriptions with CRUD operations an
 
 ---
 
-# 📊 GitHub Stats
-
-<p align="center">
-  <img width="48%" src="https://github-readme-stats.vercel.app/api?username=ranjanvrma&theme=tokyonight&hide_border=true&show_icons=true" />
-  <img width="48%" src="https://nirzak-streak-stats.vercel.app/?user=ranjanvrma&theme=tokyonight&hide_border=true" />
-</p>
-
-<p align="center">
-  <img width="42%" src="https://github-readme-stats.vercel.app/api/top-langs/?username=ranjanvrma&theme=tokyonight&hide_border=true&layout=compact" />
-</p>
-
----
-
 # 🤝 Let's Connect
 
 Open to internships, collaborations, and ML opportunities.
