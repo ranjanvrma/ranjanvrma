@@ -5,7 +5,7 @@ text{font-family:JBM, 'JetBrains Mono', ui-monospace, monospace}
 .card{fill:var(--bg);stroke:var(--line)}
 .ink{fill:var(--ink)}.mut{fill:var(--mut)}.acc{fill:var(--acc)}
 .bar{fill:var(--bar)}.rule{stroke:var(--line);fill:none}.pill{fill:none;stroke:var(--line)}
-.brand{fill:#38BDF8}.g0{fill:var(--line)}
+.btn{fill:var(--bar)}.btnt{fill:#0B2131}.brand{fill:#38BDF8}.g0{fill:var(--line)}
 .g1{fill:#38BDF8;fill-opacity:.32}.g2{fill:#38BDF8;fill-opacity:.55}
 .g3{fill:#38BDF8;fill-opacity:.78}.g4{fill:#38BDF8}
 
