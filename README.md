@@ -8,14 +8,20 @@
 
 <img src="cards/activity.svg" width="100%" alt="Contributions per month over the last 12 months, with current streak, active days and busiest day">
 
-<a href="https://github.com/ranjanvrma/rig-sight"><img src="cards/repo-rig-sight.svg" width="100%" alt="Rig Sight: agentic AI for drilling operations. LangGraph, LangChain, FastAPI, Groq, Pytest."></a>
-<p align="right"><sub><a href="https://rig-sight.onrender.com/">Rig Sight live demo</a></sub></p>
+<p>
+<a href="https://github.com/ranjanvrma/rig-sight"><img src="cards/repo-rig-sight.svg" width="74%" alt="Rig Sight: agentic AI for drilling operations. LangGraph, LangChain, FastAPI, Groq, Pytest."></a>
+<a href="https://rig-sight.onrender.com/"><img src="cards/repo-rig-sight-demo.svg" width="25%" alt="Open the Rig Sight live demo"></a>
+</p>
 
-<a href="https://github.com/ranjanvrma/docmind"><img src="cards/repo-docmind.svg" width="100%" alt="DocMind: document Q&A with grounded answers. FastAPI, React, FAISS, ONNX, OpenRouter."></a>
-<p align="right"><sub><a href="https://docmind-gmjl.onrender.com">DocMind live demo</a></sub></p>
+<p>
+<a href="https://github.com/ranjanvrma/docmind"><img src="cards/repo-docmind.svg" width="74%" alt="DocMind: document Q&A with grounded answers. FastAPI, React, FAISS, ONNX, OpenRouter."></a>
+<a href="https://docmind-gmjl.onrender.com"><img src="cards/repo-docmind-demo.svg" width="25%" alt="Open the DocMind live demo"></a>
+</p>
 
-<a href="https://github.com/ranjanvrma/fraud-detection"><img src="cards/repo-fraud-detection.svg" width="100%" alt="Fraud Risk Simulator: end-to-end fraud detection. Scikit-learn, Pandas, FastAPI, Streamlit."></a>
-<p align="right"><sub><a href="https://fraud-risk-simulator.streamlit.app/">Fraud Risk Simulator live demo</a></sub></p>
+<p>
+<a href="https://github.com/ranjanvrma/fraud-detection"><img src="cards/repo-fraud-detection.svg" width="74%" alt="Fraud Risk Simulator: end-to-end fraud detection. Scikit-learn, Pandas, FastAPI, Streamlit."></a>
+<a href="https://fraud-risk-simulator.streamlit.app/"><img src="cards/repo-fraud-detection-demo.svg" width="25%" alt="Open the Fraud Risk Simulator live demo"></a>
+</p>
 
 <a href="https://github.com/ranjanvrma/retail-sales-analytics"><img src="cards/repo-retail-sales-analytics.svg" width="100%" alt="Retail Sales Analytics: from messy data to business insights. SQL, Power BI, Power Query, Python."></a>
 
