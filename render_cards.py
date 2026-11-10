@@ -39,9 +39,9 @@ FONT_DIR = ROOT / "fonts"
 PROFILE = {
     "login": "ranjanvrma",
     "name": "Ranjan Verma",
-    "line": "AI & ML student at Symbiosis Institute of Technology, Pune. "
-            "I build agentic systems and RAG apps, and take them past the notebook.",
-    "status": "Open to ML, AI and data science internships",
+    "line": "B.Tech AI & ML student at Symbiosis Institute of Technology, Pune, graduating "
+            "in 2028. I build multi-agent systems and RAG apps, and I deploy them.",
+    "status": "Looking for ML, AI and data science internships",
     # Optional. Any jpg/png/webp; it is embedded, so keep it small (~300px square).
     "portrait": "assets/portrait.jpg",
 }
@@ -53,7 +53,7 @@ TILES = [
     {"key": "repos", "title": "Repositories", "detail": "github.com/ranjanvrma"},
 ]
 
-# One card per featured repo. File names are cards/repo-<slug>.svg.
+# One card per featured repo. File names are cards/repo-<slug>-card.svg.
 # "stat" is optional: a real number from the project, shown on the right.
 # "demo" is optional: a live URL. The repo then also gets cards/repo-<slug>-demo.svg,
 # a button panel shown beside the card in the README.
@@ -61,32 +61,31 @@ REPOS = [
     {
         "slug": "rig-sight",
         "name": "Rig Sight",
-        "tagline": "Agentic AI for drilling operations",
-        "text": "A LangGraph multi-agent system that reads Daily Drilling Reports and tracks "
-                "non-productive time across six categories. Planner, Research, Executor and "
-                "Critic agents share state and check each other's work; all maths stays in "
-                "deterministic Python.",
+        "tagline": "Multi-agent analysis of drilling reports",
+        "text": "Reads Daily Drilling Reports and tracks non-productive time (NPT) across six "
+                "categories. Planner, research, executor and critic agents share state and "
+                "check each other's output. All calculations run in plain Python, not in the model.",
         "tags": ["LangGraph", "LangChain", "FastAPI", "Groq", "Pytest"],
-        "stat": ("0.067 h", "NPT error on 15 synthetic reports, every planted mistake caught"),
+        "stat": ("0.067 h", "NPT error on 15 synthetic reports. Caught every planted mistake."),
         "demo": "https://rig-sight.onrender.com/",
     },
     {
         "slug": "docmind",
         "name": "DocMind",
-        "tagline": "Document Q&A with grounded answers",
-        "text": "A RAG app that chunks PDFs and indexes them for semantic search. Answers come "
-                "with citations, and when the documents don't hold the answer it says so. "
-                "Session isolation, rate limits and server-side API keys.",
+        "tagline": "Question answering over PDFs, with citations",
+        "text": "Splits PDFs into chunks and indexes them for semantic search. Every answer cites "
+                "its source, and if the documents don't contain the answer, it says so. Sessions "
+                "are isolated, requests are rate-limited and API keys stay on the server.",
         "tags": ["FastAPI", "React", "FAISS", "ONNX", "OpenRouter"],
         "demo": "https://docmind-gmjl.onrender.com",
     },
     {
         "slug": "fraud-detection",
         "name": "Fraud Risk Simulator",
-        "tagline": "End-to-end fraud detection",
-        "text": "Behavioural features and a Random Forest trained with SMOTE for class "
-                "imbalance. Predictions run through a FastAPI service and a Streamlit app "
-                "that gives a live fraud-risk score.",
+        "tagline": "Transaction fraud model with a scoring app",
+        "text": "Built behavioural features and trained a Random Forest, using SMOTE for the class "
+                "imbalance. A FastAPI service serves the predictions, and a Streamlit app returns "
+                "a fraud-risk score for each transaction.",
         "tags": ["Scikit-learn", "Pandas", "FastAPI", "Streamlit"],
         "stat": ("6M+", "transactions analysed"),
         "demo": "https://fraud-risk-simulator.streamlit.app/",
@@ -94,13 +93,13 @@ REPOS = [
     {
         "slug": "retail-sales-analytics",
         "name": "Retail Sales Analytics",
-        "tagline": "From messy data to business insights",
-        "text": "What drives sales and profit across products, customers and regions. SQL with "
-                "CTEs, joins and window functions, with an interactive Power BI dashboard on top.",
+        "tagline": "Sales and profit analysis in SQL and Power BI",
+        "text": "Cleaned a retail sales dataset and worked out what drives sales and profit across "
+                "products, customers and regions, using SQL with CTEs, joins and window functions. "
+                "The results are in an interactive Power BI dashboard.",
         "tags": ["SQL", "Power BI", "Power Query", "Python"],
     },
 ]
-
 # --------------------------------------------------------------------------- theme
 # Taken from the current README: JetBrains Mono, and #38BDF8 from the typing banner.
 # Swap these for your website's values; nothing else in the file hard-codes colour.
@@ -457,7 +456,7 @@ def repo(i: int, r: dict) -> list[Card]:
         pills.append((tag, x, y, pw))
         x += pw + 8
     h = y + 24 + 34
-    c = Card(f"repo-{r['slug']}-card", w, h, f"{r['name']}: {r['tagline']}. {r['text']}")
+        c = Card(f"repo-{r['slug']}-card", w, h, f"{r['name']}: {r['tagline']}. {r['text']}")
 
     body = c.text(pad, 62, r["name"], 24, 800) + c.text(pad, 90, r["tagline"], 15, 700, "acc")
     body += "".join(c.text(pad, 124 + j * 22, ln, 14, 400, "mut") for j, ln in enumerate(lines))
@@ -508,7 +507,7 @@ def graph(days) -> Card:
     c = Card("contributions", W, h, f"Contribution graph: {total} contributions from "
              f"{first:%d %b %Y} to {days[-1][0]:%d %b %Y}.")
 
-    head = c.text(x0, 42, "Day by day", 15, 700)
+        head = c.text(x0, 42, "Contributions by day", 15, 700)
     lx = W - x0
     head += c.text(lx, 42, "More", 11, 400, "mut", "end")
     lx -= width_of("More", 11) + 6 + 4 * (cell + 3) + cell
@@ -538,10 +537,10 @@ def graph(days) -> Card:
 def preview(cards: list[Card]) -> None:
     by = {c.name: c for c in cards}
     tiles = "".join(f'<img src="{t}.svg" width="32.5%"> ' for t in by if t.startswith("tile-"))
-    repos = "".join(
-        f'<p style="margin:0"><img src="repo-{r["slug"]}.svg" width="{SPLIT[0]}%"> '
+        repos = "".join(
+        f'<p style="margin:0"><img src="repo-{r["slug"]}-card.svg" width="{SPLIT[0]}%"> '
         f'<img src="repo-{r["slug"]}-demo.svg" width="{SPLIT[1]}%"></p>' if r.get("demo")
-        else f'<img src="repo-{r["slug"]}.svg" width="100%">' for r in REPOS)
+        else f'<img src="repo-{r["slug"]}-card.svg" width="100%">' for r in REPOS)
     (OUT / "preview.html").write_text(
         "<!doctype html><meta charset=utf-8><title>Profile cards preview</title>"
         "<style>body{margin:0;padding:32px 0;background:#fff}main{max-width:830px;margin:auto}"
