@@ -457,7 +457,7 @@ def repo(i: int, r: dict) -> list[Card]:
         pills.append((tag, x, y, pw))
         x += pw + 8
     h = y + 24 + 34
-    c = Card(f"repo-{r['slug']}", w, h, f"{r['name']}: {r['tagline']}. {r['text']}")
+    c = Card(f"repo-{r['slug']}-card", w, h, f"{r['name']}: {r['tagline']}. {r['text']}")
 
     body = c.text(pad, 62, r["name"], 24, 800) + c.text(pad, 90, r["tagline"], 15, 700, "acc")
     body += "".join(c.text(pad, 124 + j * 22, ln, 14, 400, "mut") for j, ln in enumerate(lines))
