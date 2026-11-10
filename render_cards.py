@@ -55,6 +55,8 @@ TILES = [
 
 # One card per featured repo. File names are cards/repo-<slug>.svg.
 # "stat" is optional: a real number from the project, shown on the right.
+# "demo" is optional: a live URL. The repo then also gets cards/repo-<slug>-demo.svg,
+# a button panel shown beside the card in the README.
 REPOS = [
     {
         "slug": "rig-sight",
@@ -66,6 +68,7 @@ REPOS = [
                 "deterministic Python.",
         "tags": ["LangGraph", "LangChain", "FastAPI", "Groq", "Pytest"],
         "stat": ("0.067 h", "NPT error on 15 synthetic reports, every planted mistake caught"),
+        "demo": "https://rig-sight.onrender.com/",
     },
     {
         "slug": "docmind",
@@ -75,6 +78,7 @@ REPOS = [
                 "with citations, and when the documents don't hold the answer it says so. "
                 "Session isolation, rate limits and server-side API keys.",
         "tags": ["FastAPI", "React", "FAISS", "ONNX", "OpenRouter"],
+        "demo": "https://docmind-gmjl.onrender.com",
     },
     {
         "slug": "fraud-detection",
@@ -85,6 +89,7 @@ REPOS = [
                 "that gives a live fraud-risk score.",
         "tags": ["Scikit-learn", "Pandas", "FastAPI", "Streamlit"],
         "stat": ("6M+", "transactions analysed"),
+        "demo": "https://fraud-risk-simulator.streamlit.app/",
     },
     {
         "slug": "retail-sales-analytics",
@@ -113,6 +118,12 @@ FONT_URL = "https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/fon
 FONT_STACK = "JBM, 'JetBrains Mono', ui-monospace, monospace"
 ADVANCE = 0.6  # JetBrains Mono advance width in em; every glyph is the same width
 W = 840        # full-width card; GitHub's README column is about 830px
+# Repos with a demo are two images side by side: the card (links to the code) and a
+# panel with the demo button (links to the demo). viewBox widths keep the README's
+# width ratio, so both images scale to exactly the same height.
+SPLIT = (74, 25)  # % widths in the README; the space between the tags is the gap
+BODY_W = W * SPLIT[0] / sum(SPLIT)
+PANEL_W = W * SPLIT[1] / sum(SPLIT)
 
 # Timeline in seconds. All cards load together, so delays are global and the page
 # plays from the hero down to the contribution graph.
@@ -179,7 +190,7 @@ text{{font-family:{FONT_STACK}}}
 .card{{fill:var(--bg);stroke:var(--line)}}
 .ink{{fill:var(--ink)}}.mut{{fill:var(--mut)}}.acc{{fill:var(--acc)}}
 .bar{{fill:var(--bar)}}.rule{{stroke:var(--line);fill:none}}.pill{{fill:none;stroke:var(--line)}}
-.brand{{fill:{BRAND}}}.g0{{fill:var(--line)}}
+.btn{{fill:var(--bar)}}.btnt{{fill:#0B2131}}.brand{{fill:{BRAND}}}.g0{{fill:var(--line)}}
 .g1{{fill:{BRAND};fill-opacity:.32}}.g2{{fill:{BRAND};fill-opacity:.55}}
 .g3{{fill:{BRAND};fill-opacity:.78}}.g4{{fill:{BRAND}}}
 """
@@ -428,24 +439,32 @@ def activity(days) -> Card:
     return c
 
 
-def repo(i: int, r: dict) -> Card:
+def repo(i: int, r: dict) -> list[Card]:
     pad = 40
-    stat_w = 230 if r.get("stat") else 0
-    text_w = W - 2 * pad - stat_w
+    demo = r.get("demo")
+    w = BODY_W if demo else W
+    stat_w = 230 if r.get("stat") and not demo else 0  # with a demo, the stat moves to the panel
+    text_w = w - 2 * pad - stat_w
     lines = wrap(r["text"], text_w, 14)
+
+    # Lay the tags out first, wrapping to a second row if the narrower card needs it.
     tags_y = 128 + len(lines) * 22 + 8
-    h = tags_y + 24 + 34
-    c = Card(f"repo-{r['slug']}", W, h, f"{r['name']}: {r['tagline']}. {r['text']}")
+    pills, x, y = [], pad, tags_y
+    for tag in r["tags"]:
+        pw = width_of(tag, 12) + 22
+        if x + pw > w - pad - stat_w and x > pad:
+            x, y = pad, y + 32
+        pills.append((tag, x, y, pw))
+        x += pw + 8
+    h = y + 24 + 34
+    c = Card(f"repo-{r['slug']}", w, h, f"{r['name']}: {r['tagline']}. {r['text']}")
 
     body = c.text(pad, 62, r["name"], 24, 800) + c.text(pad, 90, r["tagline"], 15, 700, "acc")
     body += "".join(c.text(pad, 124 + j * 22, ln, 14, 400, "mut") for j, ln in enumerate(lines))
-    x = pad
-    for tag in r["tags"]:
-        pw = width_of(tag, 12) + 22
-        body += (f'<rect class="pill" x="{x + .5:g}" y="{tags_y + .5}" width="{pw:g}" height="24" rx="12"/>'
-                 + c.text(x + pw / 2, tags_y + 16.5, tag, 12, 400, "ink", "middle"))
-        x += pw + 8
-    if r.get("stat"):
+    for tag, x, y, pw in pills:
+        body += (f'<rect class="pill" x="{x + .5:g}" y="{y + .5}" width="{pw:g}" height="24" rx="12"/>'
+                 + c.text(x + pw / 2, y + 16.5, tag, 12, 400, "ink", "middle"))
+    if r.get("stat") and not demo:
         value, label = r["stat"]
         sx = W - pad
         body += f'<line class="rule" x1="{sx - stat_w + 20}" y1="42" x2="{sx - stat_w + 20}" y2="{h - 42}"/>'
@@ -453,6 +472,26 @@ def repo(i: int, r: dict) -> Card:
         body += "".join(c.text(sx, 120 + j * 18, ln, 12, 400, "mut", "end")
                         for j, ln in enumerate(wrap(label, stat_w - 44, 12)))
     c.add(c.anim(body, T_REPOS + i * T_REPO_STEP))
+    return [c, demo_panel(i, r, h)] if demo else [c]
+
+
+def demo_panel(i: int, r: dict, h: float) -> Card:
+    """The narrow right-hand image. The whole panel is the link, styled as a button."""
+    pad, bh = 24, 40
+    bw, cx = PANEL_W - 2 * pad, PANEL_W / 2
+    c = Card(f"repo-{r['slug']}-demo", PANEL_W, h, f"Open the {r['name']} live demo")
+    body = ""
+    if r.get("stat"):
+        value, label = r["stat"]
+        body += c.text(cx, 88, value, 34, 800, "acc", "middle")
+        body += "".join(c.text(cx, 114 + j * 18, ln, 12, 400, "mut", "middle")
+                        for j, ln in enumerate(wrap(label, bw, 12)))
+        by = h - 40 - bh
+    else:
+        by = (h - bh) / 2
+    body += (f'<rect class="btn" x="{pad}" y="{by:g}" width="{bw:g}" height="{bh}" rx="{bh / 2:g}"/>'
+             + c.text(cx, by + 25, "Open live demo", 13, 800, "btnt", "middle"))
+    c.add(c.anim(body, T_REPOS + i * T_REPO_STEP + 0.12))
     return c
 
 
@@ -499,7 +538,10 @@ def graph(days) -> Card:
 def preview(cards: list[Card]) -> None:
     by = {c.name: c for c in cards}
     tiles = "".join(f'<img src="{t}.svg" width="32.5%"> ' for t in by if t.startswith("tile-"))
-    repos = "".join(f'<img src="{r}.svg" width="100%">' for r in by if r.startswith("repo-"))
+    repos = "".join(
+        f'<p style="margin:0"><img src="repo-{r["slug"]}.svg" width="{SPLIT[0]}%"> '
+        f'<img src="repo-{r["slug"]}-demo.svg" width="{SPLIT[1]}%"></p>' if r.get("demo")
+        else f'<img src="repo-{r["slug"]}.svg" width="100%">' for r in REPOS)
     (OUT / "preview.html").write_text(
         "<!doctype html><meta charset=utf-8><title>Profile cards preview</title>"
         "<style>body{margin:0;padding:32px 0;background:#fff}main{max-width:830px;margin:auto}"
@@ -521,7 +563,7 @@ def main() -> None:
         old.unlink()
     print(f"rendering {'static' if STATIC else 'animated'} cards into {OUT.relative_to(ROOT)}/")
     cards = [hero(), *(tile(i, t) for i, t in enumerate(TILES)), activity(days),
-             *(repo(i, r) for i, r in enumerate(REPOS)), graph(days)]
+             *(card for i, r in enumerate(REPOS) for card in repo(i, r)), graph(days)]
     for card in cards:
         card.save()
     if STATIC:
